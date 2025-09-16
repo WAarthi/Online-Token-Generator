@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udipi Token Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px;
+            width: 85%;
+            max-width: 900px;
+        }
+        header {
+            background-color: #d43f3f;
+            color: white;
+            padding: 25px 0;
+            margin-bottom: 25px;
+            border-radius: 8px 8px 0 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        header img {
+            max-height: 100px;
+            margin-right: 20px;
+            vertical-align: middle;
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .menu-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .menu-item h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #d43f3f;
+        }
+        .menu-item p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .menu-item button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        .menu-item button:hover {
+            background-color: #4cae4c;
+        }
+        #token-section {
+            margin-top: 30px;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        #token-display {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #d43f3f;
+        }
+        #queue-display {
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+        }
+        #queue-display h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .queue-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .queue-item:last-child {
+            border-bottom: none;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .quantity-selector button {
+            background: none;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        .quantity-selector button:hover {
+            background-color: #f0f0f0;
+        }
+        .quantity-selector input {
+            width: 60px;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+       #order-summary {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            width: 100%;
+        }
+        #order-summary h2{
+           font-size: 1.5em;
+           margin-bottom: 20px;
+           color: #333;
+        }
+        #order-summary ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        #order-summary li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #order-summary li:last-child {
+            border-bottom: none;
+        }
+        #order-summary p {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #d43f3f;
+            text-align: right;
+        }
+        #order-summary button {
+            background-color: #d43f3f;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+            width: auto;
+            align-self: center;
+        }
+        #order-summary button:hover {
+            background-color: #c82333;
+        }
+        #order-summary button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #order-summary button:disabled:hover {
+            background-color: #cccccc;
+        }
+        /* Token Display Styling */
+        .token-header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.token-items {
+    margin: 15px 0;
+}
+
+.token-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.token-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #333;
+}
+
+#order-summary button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#order-summary button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://www.uengage.in/images/addo/logos/image-1690640416.jpg" alt="Udipi Logo">
+        <h1>Welcome to Udipi!</h1>
+    </header>
+    <div class="container">
+        <h2>Our Delicious Menu</h2>
+        <div class="menu">
+            <div class="menu-item">
+                <img src="https://t3.ftcdn.net/jpg/03/62/02/26/360_F_362022640_fZ6UM0JycJlFDdBiR1pYlNddKfdGvYwR.jpg" alt="Idly">
+                <h3>Idly</h3>
+                <p>₹30</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('idly')">-</button>
+                    <input type="number" id="quantity_idly" value="0" min="0">
+                    <button onclick="incrementQuantity('idly')">+</button>
+                </div>
+                <button onclick="addToOrder('Idly', 30)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/909906350/photo/masala-dosa-south-indian-food.jpg?s=612x612&w=0&k=20&c=3CI-bw2NhYaX_t0-CZIXIIXsOygFcUaoGSmzbnVB-fU=" alt="Dosa">
+                <h3>Dosa</h3>
+                <p>₹50</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('dosa')">-</button>
+                    <input type="number" id="quantity_dosa" value="0" min="0">
+                    <button onclick="incrementQuantity('dosa')">+</button>
+                </div>
+                <button onclick="addToOrder('Dosa', 50)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1488738018/photo/medu-vada-or-medu-vada-with-sambhar-and-coconut-chutney-red-chutney-green-chutney-popular.jpg?s=612x612&w=0&k=20&c=dvWgKhQuw1lfOBxDpR6YFMLSZnWdyqYGV1pvcBt7mZw=" alt="Vada">
+                <h3>Vada</h3>
+                <p>₹25</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('vada')">-</button>
+                    <input type="number" id="quantity_vada" value="0" min="0">
+                    <button onclick="incrementQuantity('vada')">+</button>
+                </div>
+                <button onclick="addToOrder('Vada', 25)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1488737992/photo/upma-recipe-suji-ka-upma-rava-upma-with-red-and-coconut-chutney.jpg?s=612x612&w=0&k=20&c=dGTIRLT4c7XdC8xAqkumyuURqMAy3HNQccNjEQT3wmU=" alt="Upma">
+                <h3>Upma</h3>
+                <p>₹40</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('upma')">-</button>
+                    <input type="number" id="quantity_upma" value="0" min="0">
+                    <button onclick="incrementQuantity('upma')">+</button>
+                </div>
+                <button onclick="addToOrder('Upma', 40)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1306547668/photo/tasty-mysore-bonda-in-a-banana-leaf.jpg?s=612x612&w=0&k=20&c=Xp1wM1fHIvGXzc4I6MZINWbdi3j2l9_23gTpOxs-EDE=" alt="Bonda">
+                <h3>Bonda</h3>
+                <p>₹35</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('bona')">-</button>
+                    <input type="number" id="quantity_bona" value="0" min="0">
+                    <button onclick="incrementQuantity('bona')">+</button>
+                </div>
+                <button onclick="addToOrder('Bonda', 35)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1169736515/photo/homemade-delicious-semiya-upma.jpg?s=612x612&w=0&k=20&c=tkri0N_v8zrswh736Ab_neVIw7Bjv2dzXpsJCt_2IO0=" alt="Semiya Upma">
+                <h3>Semiya Upma</h3>
+                <p>₹45</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('semiyaupma')">-</button>
+                    <input type="number" id="quantity_semiyaupma" value="0" min="0">
+                    <button onclick="incrementQuantity('semiyaupma')">+</button>
+                </div>
+                <button onclick="addToOrder('Semiya Upma', 45)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1831760238/photo/famous-south-indian-food-uthappam-with-chutney.jpg?s=612x612&w=0&k=20&c=QbbQgPY9zfp9y7uIpntSrKVqBCv2lEzX-VL5MRGb5zs=" alt="Uttappa">
+                <h3>Uttappa</h3>
+                <p>₹60</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('uttappa')">-</button>
+                    <input type="number" id="quantity_uttappa" value="0" min="0">
+                    <button onclick="incrementQuantity('uttappa')">+</button>
+                </div>
+                <button onclick="addToOrder('Uttappa', 60)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/502759669/photo/halwa-puri-breakfast.jpg?s=612x612&w=0&k=20&c=pAVZBHulOXX7o3HOXgmRQAGsTFJuoAL3UbZirxLnpJg=" alt="Puri">
+                <h3>Puri</h3>
+                <p>₹40</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('puri')">-</button>
+                    <input type="number" id="quantity_puri" value="0" min="0">
+                    <button onclick="incrementQuantity('puri')">+</button>
+                </div>
+                <button onclick="addToOrder('Puri', 40)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/95574723/photo/english-tea-in-a-bone-china-cup.jpg?s=612x612&w=0&k=20&c=ZSdzzGzTz5d5SWXl3Lm5AdRNLWqDmXbmzaO5sqcHiFg=" alt="Tea">
+                <h3>Tea</h3>
+                <p>₹15</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('tea')">-</button>
+                    <input type="number" id="quantity_tea" value="0" min="0">
+                    <button onclick="incrementQuantity('tea')">+</button>
+                </div>
+                <button onclick="addToOrder('Tea', 15)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://t4.ftcdn.net/jpg/01/16/61/93/360_F_116619399_YA611bKNOW35ffK0OiyuaOcjAgXgKBui.jpg" alt="Coffee">
+                <h3>Coffee</h3>
+                <p>₹20</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('coffee')">-</button>
+                    <input type="number" id="quantity_coffee" value="0" min="0">
+                    <button onclick="incrementQuantity('coffee')">+</button>
+                </div>
+                <button onclick="addToOrder('Coffee', 20)">Add to Order</button>
+            </div>
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1413557034/photo/indian-mumbai-street-style-pav-bhaji-garnished-with-peas-raw-onions-coriander-and-butter.jpg?s=612x612&w=0&k=20&c=Egw7wRqIHwKPtZfJujwrTiUMQUxxLJOO0iri-jSZRHA=" alt="Pav Bhaji">
+                <h3>Pav Bhaji</h3>
+                <p>₹70</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('pavbhaji')">-</button>
+                    <input type="number" id="quantity_pavbhaji" value="0" min="0">
+                    <button onclick="incrementQuantity('pavbhaji')">+</button>
+                </div>
+                <button onclick="addToOrder('Pav Bhaji', 70)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1292633282/photo/chole-bhature-spicy-chick-peas-curry-also-known-as-chole-or-channa-masala-is-traditional.jpg?s=612x612&w=0&k=20&c=_RchJn069ZFAnwm6alF2VWA3VDbJnm-JIid3antsIZc=" alt="Chole Bhature">
+                <h3>Chole Bhature</h3>
+                <p>₹80</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('chole_bhature')">-</button>
+                    <input type="number" id="quantity_chole_bhature" value="0" min="0">
+                    <button onclick="incrementQuantity('chole_bhature')">+</button>
+                </div>
+                <button onclick="addToOrder('Chole Bhature', 80)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1413566368/photo/indian-food-aloo-paratha-or-indian-potato-stuffed-flatbread-served-with-butter-pickle-and.jpg?s=612x612&w=0&k=20&c=hIqRXgQTFJ4Ta_Zh_JhOc_Okjk_yJUB--uDYIjifVCc=" alt="Aloo Paratha">
+                <h3>Aloo Paratha</h3>
+                <p>₹45</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('aloo_paratha')">-</button>
+                    <input type="number" id="quantity_aloo_paratha" value="0" min="0">
+                    <button onclick="incrementQuantity('aloo_paratha')">+</button>
+                </div>
+                <button onclick="addToOrder('Aloo Paratha', 45)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1156896083/photo/cheese-masala-dosa-recipe-with-sambar-and-chutney-selective-focus.jpg?s=612x612&w=0&k=20&c=Wyy0uUGXfQn7JstC8w0DsxWJVGnqWUJUCG53a42UH9s=" alt="Masala Dosa">
+                <h3>Masala Dosa</h3>
+                <p>₹60</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('masala_dosa')">-</button>
+                    <input type="number" id="quantity_masala_dosa" value="0" min="0">
+                    <button onclick="incrementQuantity('masala_dosa')">+</button>
+                </div>
+                <button onclick="addToOrder('Masala Dosa', 60)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1186759790/photo/paneer-tikka-at-skewers-in-black-bowl-at-dark-slate-background-paneer-tikka-is-an-indian.jpg?s=612x612&w=0&k=20&c=cITToqM1KEnrixXjoLhEciqP24SxdKtW3QXykq-W5OE=" alt="Paneer Tikka">
+                <h3>Paneer Tikka</h3>
+                <p>₹90</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('paneer_tikka')">-</button>
+                    <input type="number" id="quantity_paneer_tikka" value="0" min="0">
+                    <button onclick="incrementQuantity('paneer_tikka')">+</button>
+                </div>
+                <button onclick="addToOrder('Paneer Tikka', 90)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://t3.ftcdn.net/jpg/02/28/08/24/360_F_228082457_sirIJlS0Aeq4wpM3RvuTJ3E9DnDmzkah.jpg" alt="Samosa">
+                <h3>Samosa</h3>
+                <p>₹20</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('samosa')">-</button>
+                    <input type="number" id="quantity_samosa" value="0" min="0">
+                    <button onclick="incrementQuantity('samosa')">+</button>
+                </div>
+                <button onclick="addToOrder('Samosa', 20)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://t4.ftcdn.net/jpg/10/41/99/53/360_F_1041995329_Y948A29Hru2TXn8JgkWMwJmIVauyQ9jq.jpg" alt="Dhokla">
+                <h3>Dhokla</h3>
+                <p>₹30</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('dhokla')">-</button>
+                    <input type="number" id="quantity_dhokla" value="0" min="0">
+                    <button onclick="incrementQuantity('dhokla')">+</button>
+                </div>
+                <button onclick="addToOrder('Dhokla', 30)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/163064596/photo/gulab-jamun.jpg?s=612x612&w=0&k=20&c=JvJ4AAs-N5pRzzRmVg1lG0talC3QoUt0ZGiO1NKz-kQ=" alt="Gulab Jamun">
+                <h3>Gulab Jamun</h3>
+                <p>₹40</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('gulab_jamun')">-</button>
+                    <input type="number" id="quantity_gulab_jamun" value="0" min="0">
+                    <button onclick="incrementQuantity('gulab_jamun')">+</button>
+                </div>
+                <button onclick="addToOrder('Gulab Jamun', 40)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1159362325/photo/bread-pakora.jpg?s=612x612&w=0&k=20&c=93uILcInCMXroXgjEJYXNeUzWh5NASSrEnylAgW7hcs=" alt="Jalebi">
+                <h3>Jalebi</h3>
+                <p>₹35</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('jalebi')">-</button>
+                    <input type="number" id="quantity_jalebi" value="0" min="0">
+                    <button onclick="incrementQuantity('jalebi')">+</button>
+                </div>
+                <button onclick="addToOrder('Jalebi', 35)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1453999382/photo/jhangore-ki-kheer.jpg?s=612x612&w=0&k=20&c=AxGYedan3PMDvHbvilfvpJsvJ5UDwC7n44SQvxXhzvg=" alt="Kheer">
+                <h3>Kheer</h3>
+                <p>₹50</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('kheer')">-</button>
+                    <input type="number" id="quantity_kheer" value="0" min="0">
+                    <button onclick="incrementQuantity('kheer')">+</button>
+                </div>
+                <button onclick="addToOrder('Kheer', 50)">Add to Order</button>
+            </div>
+
+             <div class="menu-item">
+                <img src="https://media.istockphoto.com/id/1008799838/photo/image-of-a-glass-of-lassi-made-from-milk-curd.jpg?s=612x612&w=0&k=20&c=L--UXX-L2bsK6Jy-mEigONFj9QEJyvU8b77FJnBLpBg=" alt="Lassi">
+                <h3>Lassi</h3>
+                <p>₹40</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('lassi')">-</button>
+                    <input type="number" id="quantity_lassi" value="0" min="0">
+                    <button onclick="incrementQuantity('lassi')">+</button>
+                </div>
+                <button onclick="addToOrder('Lassi', 40)">Add to Order</button>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://thumbs.dreamstime.com/b/hyderabad-famous-ramazan-special-sweet-kaddu-ki-kheer-kaddu-ki-kheer-ramadan-special-kheer-hyderabad-special-kheer-closeup-262451122.jpg" alt="kaddu kheer">
+                <h3>Kaddu kheer</h3>
+                <p>₹100</p>
+                <div class="quantity-selector">
+                    <button onclick="decrementQuantity('pavbhaji')">-</button>
+                    <input type="number" id="quantity_pavbhaji" value="0" min="0">
+                    <button onclick="incrementQuantity('pavbhaji')">+</button>
+                </div>
+                <button onclick="addToOrder('Pav Bhaji', 70)">Add to Order</button>
+            </div>
+        </div>
+
+        <div id="order-summary">
+            <h2>Your Order</h2>
+            <ul id="order-items"></ul>
+            <p>Total Amount: ₹<span id="total-amount">0</span></p>
+            <button onclick="generateToken()">Generate Token</button>
+        </div>
+        
+        <!-- Token Display -->
+        <div id="token-section" style="display:none;">
+            <h2>Your Token</h2>
+            <div id="token-display"></div>
+        </div>
+
+        <div id="queue-display">
+            <h2>Current Queue</h2>
+            <ul id="queue-list">
+                </ul>
+        </div>
+        <!-- Add this right below the <h1> in your header -->
+        <div id="customer-info" style="margin: 10px auto; text-align: center;">
+            <label for="customer-id" style="font-weight: bold;">Customer ID: </label>
+            <input type="text" id="customer-id" placeholder="Your name/phone" 
+                   style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+        </div>
+    </div>
+
+    <script>
+    let order = {};
+let totalAmount = 0;
+
+// Helper function to create consistent IDs
+function getItemId(itemName) {
+    return itemName.toLowerCase()
+                  .replace(/ /g, '_')
+                  .replace(/[^a-z0-9_]/g, '');
+}
+
+// Quantity control functions
+function incrementQuantity(itemName) {
+    const inputId = `quantity_${getItemId(itemName)}`;
+    const input = document.getElementById(inputId);
+    if (input) input.value = parseInt(input.value) + 1;
+}
+
+function decrementQuantity(itemName) {
+    const inputId = `quantity_${getItemId(itemName)}`;
+    const input = document.getElementById(inputId);
+    if (input && input.value > 0) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+
+// Add items to order
+function addToOrder(itemName, price) {
+    const inputId = `quantity_${getItemId(itemName)}`;
+    const quantityInput = document.getElementById(inputId);
+    
+    if (!quantityInput) {
+        console.error(`Quantity input not found for: ${itemName}`);
+        return;
+    }
+
+    const quantity = parseInt(quantityInput.value);
+    
+    if (quantity > 0) {
+        if (order[itemName]) {
+            order[itemName].quantity += quantity;
+        } else {
+            order[itemName] = {
+                price: price,
+                quantity: quantity
+            };
+        }
+        quantityInput.value = 0;
+        updateOrderSummary();
+    }
+}
+
+// Update order display
+function updateOrderSummary() {
+    const orderItemsList = document.getElementById('order-items');
+    orderItemsList.innerHTML = '';
+    totalAmount = 0;
+    
+    for (const [itemName, details] of Object.entries(order)) {
+        const itemTotal = details.price * details.quantity;
+        totalAmount += itemTotal;
+        
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${itemName} × ${details.quantity}</span>
+            <span>₹${itemTotal.toFixed(2)}</span>
+            <button onclick="removeItem('${itemName.replace(/'/g, "\\'")}')">×</button>
+        `;
+        orderItemsList.appendChild(li);
+    }
+    
+    document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+    document.querySelector('#order-summary button').disabled = totalAmount <= 0;
+}
+
+// Remove item from order
+function removeItem(itemName) {
+    delete order[itemName];
+    updateOrderSummary();
+}
+
+// Generate token
+async function generateToken() {
+    if (Object.keys(order).length === 0) {
+        alert('Please add items to your order.');
+        return;
+    }
+
+    const customerId = document.getElementById('customer-id').value.trim();
+    if (!customerId) {
+        alert('Please enter your name or phone number');
+        return;
+    }
+
+    try {
+        const orderData = {
+            items: order,
+            total: totalAmount,
+            customer_id: customerId
+        };
+
+        const response = await fetch('http://127.0.0.1:5005/generate_token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to generate token');
+        }
+
+        const data = await response.json();
+        displayToken(data);
+        
+        // DON'T clear the order here - comment out these lines:
+        // order = {};
+        // totalAmount = 0;
+        // updateOrderSummary();
+        
+        fetchQueue();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+// Display token
+function displayToken(tokenData) {
+    const tokenDisplay = document.getElementById('token-display');
+    
+    let tokenHTML = `
+        <div class="token-header">
+            <h3>Udipi Hotel</h3>
+            <p>Customer: ${tokenData.customer_id}</p>
+            <p>Token #${tokenData.token_number}</p>
+            <p>${tokenData.formatted_time}</p>
+        </div>
+        <div class="token-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+    
+    tokenData.items.forEach(item => {
+        tokenHTML += `
+            <tr>
+                <td>${item.item_name}</td>
+                <td>${item.quantity}</td>
+                <td>₹${item.price.toFixed(2)}</td>
+                <td>₹${item.amount.toFixed(2)}</td>
+            </tr>`;
+    });
+    
+    tokenHTML += `
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"><strong>Grand Total</strong></td>
+                        <td><strong>₹${tokenData.total.toFixed(2)}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>`;
+    
+    tokenDisplay.innerHTML = tokenHTML;
+    document.getElementById('token-section').style.display = 'block';
+}
+
+// Add a new function to clear the current order
+function clearCurrentOrder() {
+    order = {};
+    totalAmount = 0;
+    updateOrderSummary();
+    document.getElementById('customer-id').value = '';
+    document.getElementById('token-section').style.display = 'none';
+}
+
+// Fetch and display queue
+async function fetchQueue() {
+    try {
+        const response = await fetch('http://127.0.0.1:5005/queue');
+        if (!response.ok) throw new Error('Failed to fetch queue');
+        
+        const data = await response.json();
+        const queueList = document.getElementById('queue-list');
+        queueList.innerHTML = '';
+        
+        data.queue.forEach(order => {
+            const li = document.createElement('li');
+            li.className = 'queue-item';
+            li.innerHTML = `
+                <div>
+                    <strong>#${order.token_number}</strong>
+                    <span>${order.customer_id}</span>
+                    <small>${new Date(order.timestamp).toLocaleTimeString()}</small>
+                </div>
+                <div>${order.items.map(i => `${i.item_name} (${i.quantity})`).join(', ')}</div>
+                <div>₹${order.total.toFixed(2)}</div>
+            `;
+            queueList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error fetching queue:', error);
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchQueue();
+    setInterval(fetchQueue, 5000);
+    
+    // Add a new button to clear current order
+    const orderSummary = document.getElementById('order-summary');
+    const clearButton = document.createElement('button');
+    clearButton.textContent = 'Start New Order';
+    clearButton.onclick = clearCurrentOrder;
+    clearButton.style.marginLeft = '10px';
+    clearButton.style.backgroundColor = '#f0ad4e';
+    orderSummary.appendChild(clearButton);
+});
+    </script>
+</body>
+</html>
